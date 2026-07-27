@@ -6,6 +6,7 @@
   <title>Data Submission</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vant@4/lib/index.css">
   <style>
+    [v-cloak] { display: none !important; }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       background: #f5f6fa;
@@ -213,9 +214,9 @@
 </head>
 <body>
 
-<div id="app">
+<div id="app" v-cloak>
   <div class="page-body">
-    <!-- Global info: Date + Reporter -->
+    <!-- 全局信息：日期 + 填写人 -->
     <div class="global-info-card">
       <div class="row">
         <div class="item">
@@ -241,7 +242,7 @@
       <span class="count">Total: <strong>{{ records.length }}</strong> records</span>
     </div>
 
-    <!-- Record card -->
+    <!-- 记录卡片 -->
     <div v-for="(item, index) in records" :key="item.id" class="record-card">
       <div class="card-top"></div>
       <div class="record-header">
@@ -276,7 +277,7 @@
     </div>
   </div>
 
-  <!-- Footer -->
+  <!-- 底部按钮 -->
   <div class="footer-bar">
     <van-button plain icon="plus" @click="addRow">Add Row</van-button>
     <van-button type="primary" plain icon="notes-o" @click="saveDraft">Save Draft</van-button>
@@ -289,7 +290,7 @@
     >Submit</van-button>
   </div>
 
-  <!-- Date picker -->
+  <!-- 日期选择器 -->
   <van-popup v-model:show="showDatePicker" position="bottom" round>
     <van-date-picker
       title="Select Date"
@@ -301,7 +302,7 @@
     />
   </van-popup>
 
-  <!-- Progress dialog (Chinese kept for detail) -->
+  <!-- 提交通知弹窗（保留中文） -->
   <div v-if="showProgress" class="progress-overlay">
     <div class="progress-dialog">
       <div class="title">{{ progressDone ? progressTitle : '正在提交...' }}</div>
@@ -348,38 +349,43 @@ const { createApp, ref, watch, onMounted, nextTick, computed } = Vue;
 
 const app = createApp({
   setup() {
-    const records = ref([]);
-    const globalDate = ref('');
-    const reporter = ref('');
-    const showDatePicker = ref(false);
-    const submitting = ref(false);
-    const showProgress = ref(false);
-    const progressList = ref([]);
-    const progressCompleted = ref(0);
-    const progressSuccess = ref(0);
-    const progressFail = ref(0);
-    const progressTotal = ref(0);
-    const progressDone = ref(false);
-    const failedItems = ref([]);
+    // ===== 响应式状态 =====
+    const records = ref([]);           // 记录列表
+    const globalDate = ref('');         // 全局日期
+    const reporter = ref('');           // 填写人
+    const showDatePicker = ref(false);  // 日期选择器显隐
+    const submitting = ref(false);      // 提交中状态
+    const showProgress = ref(false);    // 进度弹窗显隐
+    const progressList = ref([]);       // 每条记录的提交进度
+    const progressCompleted = ref(0);   // 已完成数
+    const progressSuccess = ref(0);     // 成功数
+    const progressFail = ref(0);        // 失败数
+    const progressTotal = ref(0);       // 当前批次总数
+    const progressDone = ref(false);    // 是否全部完成
+    const failedItems = ref([]);        // 失败项的索引列表（用于重试）
 
+    // ===== 常量与计算属性 =====
     const STORAGE_KEY = 'data_records_draft_v5';
     const DATE_KEY = 'data_global_date_v5';
     const REPORTER_KEY = 'data_reporter_v5';
-    const minDate = new Date(2020, 0, 1);
-    const maxDate = new Date(2030, 11, 31);
-    const pickerDefault = new Date();
+    const minDate = new Date(2020, 0, 1);   // 日期选择器最小范围
+    const maxDate = new Date(2030, 11, 31); // 日期选择器最大范围
+    const pickerDefault = new Date();        // 日期选择器默认显示当天
 
+    // ===== 进度百分比（相对于当前批次总数） =====
     const progressPercent = computed(() => {
       if (progressTotal.value === 0) return 0;
       return Math.round((progressCompleted.value / progressTotal.value) * 100);
     });
 
+    // ===== 进度弹窗标题（提交完成后显示） =====
     const progressTitle = computed(() => {
       if (!progressDone.value) return '';
       if (progressFail.value === 0) return `全部提交成功！共 ${progressTotal.value} 条`;
       return `成功 ${progressSuccess.value} 条，失败 ${progressFail.value} 条`;
     });
 
+    // ===== 创建空记录行 =====
     const createEmptyRow = () => ({
       id: Date.now() + Math.random().toString(36).slice(2, 6),
       time: '',
@@ -390,6 +396,7 @@ const app = createApp({
       cargoWeight: ''
     });
 
+    // ===== 从 localStorage 恢复草稿 =====
     const loadFromCache = () => {
       try {
         const d = localStorage.getItem(DATE_KEY);
@@ -405,6 +412,7 @@ const app = createApp({
       records.value = [createEmptyRow()];
     };
 
+    // ===== 手动保存草稿到 localStorage =====
     const saveDraft = () => {
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(records.value));
@@ -449,7 +457,8 @@ const app = createApp({
       }).catch(() => {});
     };
 
-    // --- Submit ---
+    // ===== 提交数据到后端 API =====
+    // 逐条发送所有记录，Cloudflare 后端会循环调用 WPS webhook
     const submitData = async () => {
       if (!globalDate.value || !globalDate.value.trim()) {
         vant.showToast({ message: '请选择日期', icon: 'fail' });

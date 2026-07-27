@@ -27,7 +27,7 @@ export async function onRequest(context) {
     });
   }
 
-  const { records, globalDate } = data;
+  const { records, globalDate, reporter } = data;
 
   if (!Array.isArray(records) || records.length === 0) {
     return new Response(JSON.stringify({ error: '提交数据为空，请至少填写一条记录' }), {
@@ -51,8 +51,11 @@ export async function onRequest(context) {
     // 构建发送给 WPS 的 payload
     const payload = {
       date: globalDate,
+      reporter: reporter || '',
       time: record.time || '',
       bags: record.bags || '',
+      carNumber: record.carNumber || '',
+      tareWeight: record.tareWeight || '',
       grossWeight: record.grossWeight || '',
       cargoWeight: record.cargoWeight || ''
     };

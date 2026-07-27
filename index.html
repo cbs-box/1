@@ -16,51 +16,62 @@
       background: linear-gradient(135deg, #1989fa 0%, #3a7bd5 100%);
       padding: 20px 16px 28px;
       color: #fff;
-      position: sticky;
-      top: 0;
-      z-index: 10;
     }
     .page-header h1 { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
     .page-header p { font-size: 13px; opacity: 0.85; }
     .page-body { padding: 12px 12px 20px; margin-top: -12px; }
 
-    .global-date-card {
+    /* ---- 全局信息卡片 ---- */
+    .global-info-card {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       border-radius: 14px;
-      padding: 16px 18px;
+      padding: 14px 16px;
       margin-bottom: 16px;
       color: #fff;
-      box-shadow: 0 4px 16px rgba(102, 126, 234, 0.35);
+      box-shadow: 0 4px 16px rgba(102,126,234,0.35);
     }
-    .global-date-card .card-label {
-      font-size: 13px;
-      opacity: 0.9;
+    .global-info-card .card-label {
+      font-size: 12px;
+      opacity: 0.85;
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 4px;
       margin-bottom: 6px;
     }
-    .global-date-card .van-field {
+    .global-info-card .row {
+      display: flex;
+      gap: 12px;
+    }
+    .global-info-card .row .item {
+      flex: 1;
+    }
+    .global-info-card .van-field {
       padding: 0 !important;
       background: transparent !important;
     }
-    .global-date-card .van-field__label {
+    .global-info-card .van-field__label {
       color: rgba(255,255,255,0.85) !important;
-      width: 60px !important;
-      font-size: 14px !important;
+      width: auto !important;
+      min-width: 36px;
+      margin-right: 4px;
+      font-size: 13px !important;
     }
-    .global-date-card .van-field__body input {
+    .global-info-card .van-field__body input {
       color: #fff !important;
-      font-size: 18px !important;
+      font-size: 16px !important;
       font-weight: 600;
       background: rgba(255,255,255,0.15) !important;
-      border-radius: 8px !important;
-      padding: 6px 12px !important;
+      border-radius: 6px !important;
+      padding: 4px 10px !important;
+      height: 36px !important;
     }
-    .global-date-card .van-field__body input::placeholder {
+    .global-info-card .van-field__body input::placeholder {
       color: rgba(255,255,255,0.5) !important;
     }
-    .global-date-card .van-icon { color: #fff !important; }
+    .global-info-card .van-field__body .van-field__control {
+      color: #fff !important;
+    }
+    .global-info-card .van-icon { color: #fff !important; }
 
     .stats-bar {
       display: flex;
@@ -71,31 +82,25 @@
     .stats-bar .count { font-size: 14px; color: #646566; }
     .stats-bar .count strong { color: #1989fa; font-size: 16px; }
 
+    /* ---- 记录卡片 ---- */
     .record-card {
       background: #fff;
       border-radius: 14px;
-      padding: 0 16px 14px;
+      padding: 0 14px 12px;
       margin-bottom: 14px;
       box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-      position: relative;
-      overflow: hidden;
     }
-    .record-card .card-color-bar {
+    .record-card .card-top {
       height: 3px;
       background: linear-gradient(90deg, #1989fa, #07c160);
-      margin: 0 -16px 0;
+      margin: 0 -14px;
     }
     .record-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 0 8px;
+      padding: 10px 0 8px;
       border-bottom: 1px solid #f0f0f0;
-    }
-    .record-header .left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
     .record-index {
       font-size: 12px;
@@ -114,24 +119,43 @@
       border-radius: 50%;
     }
     .btn-minus:active { transform: scale(0.8); background: #fef0f0; }
-    .record-fields { padding-top: 6px; }
-    .record-fields .van-field { padding: 4px 0 !important; }
-    .record-fields .van-field__label {
-      width: 76px !important;
+
+    /* 字段网格布局：2列 */
+    .field-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px 10px;
+      padding-top: 4px;
+    }
+    .field-grid .full-row {
+      grid-column: 1 / -1;
+    }
+    .field-grid .van-field {
+      padding: 2px 0 !important;
+    }
+    .field-grid .van-field__label {
+      width: auto !important;
+      min-width: 48px;
+      margin-right: 2px;
       font-size: 13px !important;
       color: #646566;
     }
-    .record-fields .van-field__body input { font-size: 14px !important; }
-    .record-fields .time-field .van-field__label {
+    .field-grid .van-field__body input {
+      font-size: 14px !important;
+      background: #f7f8fa !important;
+      border-radius: 6px !important;
+      padding: 4px 10px !important;
+      height: 36px !important;
+    }
+    .field-grid .time-field .van-field__label {
       color: #1989fa !important;
       font-weight: 600;
     }
-    .record-fields .time-field .van-field__body input {
+    .field-grid .time-field .van-field__body input {
       background: #f0f7ff !important;
-      border-radius: 6px !important;
-      padding: 4px 10px !important;
     }
 
+    /* ---- 底部 ---- */
     .footer-bar {
       position: fixed;
       bottom: 0;
@@ -163,10 +187,16 @@
       border-color: transparent;
       color: #fff;
     }
+    .footer-bar .van-button--warning {
+      background: linear-gradient(135deg, #ff976a, #ee6a1f);
+      border-color: transparent;
+      color: #fff;
+    }
 
+    /* ---- 进度弹窗 ---- */
     .progress-overlay {
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
+      top:0; left:0; right:0; bottom:0;
       background: rgba(0,0,0,0.5);
       z-index: 1000;
       display: flex;
@@ -185,44 +215,29 @@
       box-shadow: 0 8px 32px rgba(0,0,0,0.15);
     }
     .progress-dialog .title {
-      font-size: 17px;
-      font-weight: 600;
-      text-align: center;
-      margin-bottom: 16px;
-      color: #323233;
+      font-size: 17px; font-weight: 600; text-align: center; margin-bottom: 16px; color: #323233;
     }
     .progress-dialog .total-progress { margin-bottom: 16px; }
     .progress-dialog .total-progress .info {
-      display: flex;
-      justify-content: space-between;
-      font-size: 13px;
-      color: #646566;
-      margin-bottom: 6px;
+      display: flex; justify-content: space-between; font-size: 13px; color: #646566; margin-bottom: 6px;
     }
     .progress-dialog .total-progress .info .done { color: #07c160; font-weight: 600; }
     .progress-dialog .total-progress .info .fail { color: #ee0a24; font-weight: 600; }
-
     .record-progress-list { list-style: none; padding: 0; margin: 0; }
     .record-progress-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 0;
-      border-bottom: 1px solid #f5f5f5;
-      font-size: 13px;
+      display: flex; align-items: center; padding: 7px 0; border-bottom: 1px solid #f5f5f5; font-size: 13px;
     }
     .record-progress-item:last-child { border-bottom: none; }
-    .record-progress-item .record-label { flex: 1; margin: 0 10px; color: #323233; }
-    .record-progress-item .record-label small { color: #969799; font-size: 12px; }
     .record-progress-item .status-dot {
-      width: 8px; height: 8px; border-radius: 50%; display: inline-block; flex-shrink: 0;
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-right: 8px;
     }
-    .record-progress-item .status-dot.pending { background: #c8c9cc; }
-    .record-progress-item .status-dot.loading { background: #1989fa; animation: blink 0.6s ease-in-out infinite alternate; }
-    .record-progress-item .status-dot.success { background: #07c160; }
-    .record-progress-item .status-dot.fail { background: #ee0a24; }
+    .status-dot.pending { background: #c8c9cc; }
+    .status-dot.loading { background: #1989fa; animation: blink 0.6s ease-in-out infinite alternate; }
+    .status-dot.success { background: #07c160; }
+    .status-dot.fail { background: #ee0a24; }
     @keyframes blink { from { opacity: 0.3; } to { opacity: 1; } }
-
+    .record-progress-item .label { flex: 1; color: #323233; }
+    .record-progress-item .label small { color: #969799; font-size: 12px; margin-left: 4px; }
     .empty-tip { text-align: center; color: #969799; padding: 40px 0; font-size: 14px; }
   </style>
 </head>
@@ -231,68 +246,97 @@
 <div id="app">
   <div class="page-header">
     <h1>数据提交系统</h1>
-    <p>统一日期，支持多条记录批量提交</p>
+    <p>统一日期与填写人，支持多条记录批量提交</p>
   </div>
 
   <div class="page-body">
-    <div class="global-date-card">
-      <div class="card-label">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-          <line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line>
-          <line x1="3" y1="10" x2="21" y2="10"></line>
-        </svg>
-        统一日期（所有记录共享）
+    <!-- 全局信息：日期 + 填写人 -->
+    <div class="global-info-card">
+      <div class="row">
+        <div class="item">
+          <div class="card-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+              <line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line>
+              <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+            日期（所有记录共享）
+          </div>
+          <van-field
+            v-model="globalDate"
+            placeholder="请选择日期"
+            readonly
+            is-link
+            @click="showDatePicker = true"
+          />
+        </div>
+        <div class="item">
+          <div class="card-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            填写人（所有记录共享）
+          </div>
+          <van-field
+            v-model="reporter"
+            placeholder="请输入姓名"
+            clearable
+          />
+        </div>
       </div>
-      <van-field
-        v-model="globalDate"
-        label="日期"
-        placeholder="请选择日期"
-        readonly
-        is-link
-        @click="showDatePicker = true"
-        input-align="left"
-      />
     </div>
 
     <div class="stats-bar">
       <span class="count">共 <strong>{{ records.length }}</strong> 条记录</span>
     </div>
 
+    <!-- 记录卡片 -->
     <div v-for="(item, index) in records" :key="item.id" class="record-card">
-      <div class="card-color-bar"></div>
+      <div class="card-top"></div>
       <div class="record-header">
-        <div class="left">
-          <span class="record-index">#{{ index + 1 }}</span>
-        </div>
+        <span class="record-index">#{{ index + 1 }}</span>
         <span class="btn-minus" @click="removeRow(index)">✕</span>
       </div>
-      <div class="record-fields">
+      <div class="field-grid">
         <van-field
           v-model="item.time"
-          label="⏰ 时间"
+          label="时间"
           placeholder="如 08:30"
           clearable
-          class="time-field"
+          class="full-row time-field"
         />
         <van-field
           v-model="item.bags"
           label="袋数"
-          placeholder="请输入袋数"
+          placeholder="请输入"
+          clearable
+          type="number"
+        />
+        <van-field
+          v-model="item.carNumber"
+          label="车号"
+          placeholder="请输入"
+          clearable
+        />
+        <van-field
+          v-model="item.tareWeight"
+          label="车皮重"
+          placeholder="请输入"
           clearable
           type="number"
         />
         <van-field
           v-model="item.grossWeight"
           label="毛重"
-          placeholder="请输入毛重"
+          placeholder="请输入"
           clearable
           type="number"
         />
         <van-field
           v-model="item.cargoWeight"
           label="货重"
-          placeholder="请输入货重"
+          placeholder="请输入"
           clearable
           type="number"
         />
@@ -305,8 +349,10 @@
     </div>
   </div>
 
+  <!-- 底部 -->
   <div class="footer-bar">
-    <van-button type="primary" plain icon="plus" @click="addRow">添加一行</van-button>
+    <van-button plain icon="plus" @click="addRow">添加一行</van-button>
+    <van-button type="primary" plain icon="notes-o" @click="saveDraft">保存草稿</van-button>
     <van-button
       type="success"
       icon="send"
@@ -316,9 +362,9 @@
     >提交</van-button>
   </div>
 
+  <!-- 日期选择器 -->
   <van-popup v-model:show="showDatePicker" position="bottom" round>
     <van-date-picker
-      v-model="tempDate"
       title="选择日期"
       :min-date="minDate"
       :max-date="maxDate"
@@ -327,46 +373,36 @@
     />
   </van-popup>
 
-  <!-- 提交进度弹窗 -->
-  <div v-if="showProgress" class="progress-overlay" @click.self="() => {}">
+  <!-- 进度弹窗 -->
+  <div v-if="showProgress" class="progress-overlay">
     <div class="progress-dialog">
       <div class="title">{{ progressDone ? '提交完成' : '正在提交...' }}</div>
-
       <div class="total-progress">
         <div class="info">
           <span>进度 {{ progressCompleted }} / {{ progressTotal }}</span>
-          <span>成功 <span class="done">{{ progressSuccess }}</span><span v-if="progressFail > 0">，失败 <span class="fail">{{ progressFail }}</span></span></span>
+          <span>成功 <span class="done">{{ progressSuccess }}</span><span v-if="progressFail>0">，失败 <span class="fail">{{ progressFail }}</span></span></span>
         </div>
-        <van-progress
-          :percentage="progressPercent"
-          :stroke-width="8"
-          :color="progressDone && progressFail === 0 ? '#07c160' : (progressFail > 0 ? '#ee0a24' : '#1989fa')"
-          :track-color="'#f0f0f0'"
-          pivot-text=""
-        />
+        <van-progress :percentage="progressPercent" :stroke-width="8"
+          :color="progressDone && progressFail===0 ? '#07c160' : (progressFail>0 ? '#ee0a24' : '#1989fa')"
+          :track-color="'#f0f0f0'" pivot-text="" />
       </div>
-
       <ul class="record-progress-list">
         <li v-for="(p, idx) in progressList" :key="idx" class="record-progress-item">
           <span class="status-dot" :class="p.status"></span>
-          <span class="record-label">
-            第 {{ idx + 1 }} 条
-            <small v-if="p.time">⏰{{ p.time }}</small>
-          </span>
-          <span v-if="p.status === 'success'" style="color:#07c160;font-size:12px;">✓</span>
-          <span v-else-if="p.status === 'fail'" style="color:#ee0a24;font-size:12px;" :title="p.error">✗</span>
-          <span v-else-if="p.status === 'loading'" style="color:#1989fa;font-size:12px;">⋯</span>
-          <span v-else style="color:#c8c9cc;font-size:12px;">—</span>
+          <span class="label">第{{ idx+1 }}条<small v-if="p.time">{{ p.time }}</small></span>
+          <span v-if="p.status==='success'" style="color:#07c160">✓</span>
+          <span v-else-if="p.status==='fail'" style="color:#ee0a24" :title="p.error">✗</span>
+          <span v-else-if="p.status==='loading'" style="color:#1989fa">⋯</span>
+          <span v-else style="color:#c8c9cc">—</span>
         </li>
       </ul>
-
       <div style="margin-top:16px;display:flex;gap:10px;">
         <template v-if="!progressDone">
           <van-button type="default" block disabled round>请稍候...</van-button>
         </template>
         <template v-if="progressDone">
           <van-button type="default" block round @click="closeProgress">关闭</van-button>
-          <van-button v-if="progressFail > 0" type="danger" block round plain @click="retryFailed">重试失败项</van-button>
+          <van-button v-if="progressFail>0" type="danger" block round plain @click="retryFailed">重试失败项</van-button>
         </template>
       </div>
     </div>
@@ -383,8 +419,8 @@ const app = createApp({
   setup() {
     const records = ref([]);
     const globalDate = ref('');
+    const reporter = ref('');
     const showDatePicker = ref(false);
-    const tempDate = ref(new Date());
     const submitting = ref(false);
     const showProgress = ref(false);
     const progressList = ref([]);
@@ -395,8 +431,9 @@ const app = createApp({
     const progressDone = ref(false);
     const failedItems = ref([]);
 
-    const STORAGE_KEY = 'data_records_draft_v3';
-    const DATE_KEY = 'data_global_date_v3';
+    const STORAGE_KEY = 'data_records_draft_v4';
+    const DATE_KEY = 'data_global_date_v4';
+    const REPORTER_KEY = 'data_reporter_v4';
     const minDate = new Date(2020, 0, 1);
     const maxDate = new Date(2030, 11, 31);
 
@@ -405,37 +442,49 @@ const app = createApp({
       return Math.round((progressCompleted.value / progressTotal.value) * 100);
     });
 
+    const createEmptyRow = () => ({
+      id: Date.now() + Math.random().toString(36).slice(2, 6),
+      time: '',
+      bags: '',
+      carNumber: '',
+      tareWeight: '',
+      grossWeight: '',
+      cargoWeight: ''
+    });
+
     const loadFromCache = () => {
       try {
-        const cachedDate = localStorage.getItem(DATE_KEY);
-        if (cachedDate) globalDate.value = cachedDate;
-        const cached = localStorage.getItem(STORAGE_KEY);
-        if (cached) {
-          const parsed = JSON.parse(cached);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            records.value = parsed;
-            return;
-          }
+        const d = localStorage.getItem(DATE_KEY);
+        if (d) globalDate.value = d;
+        const r = localStorage.getItem(REPORTER_KEY);
+        if (r) reporter.value = r;
+        const c = localStorage.getItem(STORAGE_KEY);
+        if (c) {
+          const p = JSON.parse(c);
+          if (Array.isArray(p) && p.length > 0) { records.value = p; return; }
         }
       } catch (_) {}
       records.value = [createEmptyRow()];
     };
 
-    const createEmptyRow = () => ({
-      id: Date.now() + Math.random().toString(36).slice(2, 6),
-      time: '',
-      bags: '',
-      grossWeight: '',
-      cargoWeight: ''
-    });
+    // 手动保存草稿
+    const saveDraft = () => {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(records.value));
+        localStorage.setItem(DATE_KEY, globalDate.value);
+        localStorage.setItem(REPORTER_KEY, reporter.value);
+        vant.showToast({ message: '草稿已保存', icon: 'success' });
+      } catch (_) {
+        vant.showToast({ message: '保存失败', icon: 'fail' });
+      }
+    };
 
     const onDateConfirm = ({ selectedValues }) => {
-      const year = selectedValues[0];
-      const month = String(selectedValues[1]).padStart(2, '0');
-      const day = String(selectedValues[2]).padStart(2, '0');
-      globalDate.value = `${year}-${month}-${day}`;
+      const y = selectedValues[0];
+      const m = String(selectedValues[1]).padStart(2, '0');
+      const d = String(selectedValues[2]).padStart(2, '0');
+      globalDate.value = `${y}-${m}-${d}`;
       showDatePicker.value = false;
-      localStorage.setItem(DATE_KEY, globalDate.value);
     };
 
     const addRow = () => {
@@ -448,13 +497,14 @@ const app = createApp({
     const removeRow = (index) => {
       if (records.value.length <= 1) {
         const row = records.value[0];
-        row.time = ''; row.bags = ''; row.grossWeight = ''; row.cargoWeight = '';
-        vant.showToast({ message: '已清空内容', icon: 'info' });
+        row.time = ''; row.bags = ''; row.carNumber = '';
+        row.tareWeight = ''; row.grossWeight = ''; row.cargoWeight = '';
+        vant.showToast({ message: '已清空', icon: 'info' });
         return;
       }
       vant.showConfirmDialog({
         title: '确认删除',
-        message: `确定要删除第 ${index + 1} 行吗？`,
+        message: `确定删除第 ${index + 1} 行？`,
         confirmButtonColor: '#ee0a24'
       }).then(() => {
         records.value.splice(index, 1);
@@ -462,26 +512,24 @@ const app = createApp({
       }).catch(() => {});
     };
 
-    watch(records, (newVal) => {
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(newVal)); } catch (_) {}
-    }, { deep: true });
-
     // --- 提交 ---
     const submitData = async () => {
-      if (!globalDate.value || globalDate.value.trim() === '') {
-        vant.showToast({ message: '请先选择日期', icon: 'fail' });
+      if (!globalDate.value || !globalDate.value.trim()) {
+        vant.showToast({ message: '请选择日期', icon: 'fail' });
         return;
       }
-
-      // 只验证时间（每条记录都需要时间）
-      const invalidRows = [];
+      if (!reporter.value || !reporter.value.trim()) {
+        vant.showToast({ message: '请填写填写人', icon: 'fail' });
+        return;
+      }
+      const invalids = [];
       for (let i = 0; i < records.value.length; i++) {
-        if (!records.value[i].time || records.value[i].time.trim() === '') {
-          invalidRows.push(i + 1);
+        if (!records.value[i].time || !records.value[i].time.trim()) {
+          invalids.push(i + 1);
         }
       }
-      if (invalidRows.length > 0) {
-        vant.showToast({ message: `第 ${invalidRows.join('、')} 行「时间」不能为空`, icon: 'fail', duration: 2000 });
+      if (invalids.length > 0) {
+        vant.showToast({ message: `第 ${invalids.join('、')} 行「时间」不能为空`, icon: 'fail', duration: 2000 });
         return;
       }
 
@@ -494,38 +542,31 @@ const app = createApp({
       progressTotal.value = records.value.length;
       failedItems.value = [];
 
-      progressList.value = records.value.map(r => ({
-        status: 'pending',
-        time: r.time,
-        error: ''
-      }));
+      progressList.value = records.value.map(r => ({ status: 'loading', time: r.time, error: '' }));
 
-      // 立即标记为 loading，让用户看到反馈
-      for (let i = 0; i < progressList.value.length; i++) {
-        progressList.value[i].status = 'loading';
-      }
-
-      const recordsToSubmit = records.value.map(r => ({
+      const toSubmit = records.value.map(r => ({
         time: r.time,
         bags: r.bags || '',
+        carNumber: r.carNumber || '',
+        tareWeight: r.tareWeight || '',
         grossWeight: r.grossWeight || '',
         cargoWeight: r.cargoWeight || ''
       }));
 
       try {
-        const response = await fetch('/api/submit', {
+        const resp = await fetch('/api/submit', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             globalDate: globalDate.value,
-            records: recordsToSubmit
+            reporter: reporter.value,
+            records: toSubmit
           })
         });
+        const result = await resp.json();
 
-        const result = await response.json();
-
-        if (!response.ok) {
-          for (let i = 0; i < progressList.value.length; i++) {
+        if (!resp.ok) {
+          for (let i = 0; i < records.value.length; i++) {
             progressList.value[i].status = 'fail';
             progressList.value[i].error = result.error || '提交失败';
           }
@@ -536,7 +577,7 @@ const app = createApp({
           return;
         }
 
-        if (result.results && Array.isArray(result.results)) {
+        if (result.results) {
           for (let i = 0; i < result.results.length; i++) {
             const r = result.results[i];
             progressList.value[i].status = r.success ? 'success' : 'fail';
@@ -547,7 +588,7 @@ const app = createApp({
             progressCompleted.value = i + 1;
             if (r.success) progressSuccess.value++;
             else progressFail.value++;
-            await new Promise(resolve => setTimeout(resolve, 60));
+            await new Promise(resolve => setTimeout(resolve, 50));
           }
         }
       } catch (err) {
@@ -569,18 +610,17 @@ const app = createApp({
       }
     };
 
-    const closeProgress = () => {
-      showProgress.value = false;
-    };
+    const closeProgress = () => { showProgress.value = false; };
 
     const retryFailed = async () => {
       if (failedItems.value.length === 0) return;
-
-      const failIndexes = [...failedItems.value];
-      const failedRecords = failIndexes.map(idx => ({
+      const failIdx = [...failedItems.value];
+      const failedRecs = failIdx.map(idx => ({
         originalIndex: idx,
         time: records.value[idx].time,
         bags: records.value[idx].bags || '',
+        carNumber: records.value[idx].carNumber || '',
+        tareWeight: records.value[idx].tareWeight || '',
         grossWeight: records.value[idx].grossWeight || '',
         cargoWeight: records.value[idx].cargoWeight || ''
       }));
@@ -589,71 +629,58 @@ const app = createApp({
       progressCompleted.value = 0;
       progressSuccess.value = 0;
       progressFail.value = 0;
-      progressTotal.value = failIndexes.length;
+      progressTotal.value = failIdx.length;
 
-      for (const idx of failIndexes) {
+      for (const idx of failIdx) {
         progressList.value[idx].status = 'loading';
         progressList.value[idx].error = '';
       }
       failedItems.value = [];
 
       try {
-        const response = await fetch('/api/submit', {
+        const resp = await fetch('/api/submit', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             globalDate: globalDate.value,
-            records: failedRecords.map(r => ({
-              time: r.time,
-              bags: r.bags,
-              grossWeight: r.grossWeight,
-              cargoWeight: r.cargoWeight
+            reporter: reporter.value,
+            records: failedRecs.map(r => ({
+              time: r.time, bags: r.bags, carNumber: r.carNumber,
+              tareWeight: r.tareWeight, grossWeight: r.grossWeight, cargoWeight: r.cargoWeight
             }))
           })
         });
-
-        const result = await response.json();
-
-        if (result.results && Array.isArray(result.results)) {
+        const result = await resp.json();
+        if (result.results) {
           for (let i = 0; i < result.results.length; i++) {
             const r = result.results[i];
-            const origIdx = failedRecords[i].originalIndex;
-            progressList.value[origIdx].status = r.success ? 'success' : 'fail';
-            if (!r.success) {
-              progressList.value[origIdx].error = r.error || `HTTP ${r.status}`;
-              failedItems.value.push(origIdx);
-            }
+            const oi = failedRecs[i].originalIndex;
+            progressList.value[oi].status = r.success ? 'success' : 'fail';
+            if (!r.success) { progressList.value[oi].error = r.error || `HTTP ${r.status}`; failedItems.value.push(oi); }
             progressCompleted.value = i + 1;
-            if (r.success) progressSuccess.value++;
-            else progressFail.value++;
-            await new Promise(resolve => setTimeout(resolve, 60));
+            if (r.success) progressSuccess.value++; else progressFail.value++;
+            await new Promise(resolve => setTimeout(resolve, 50));
           }
         }
       } catch (err) {
-        for (const idx of failIndexes) {
+        for (const idx of failIdx) {
           progressList.value[idx].status = 'fail';
           progressList.value[idx].error = '网络错误: ' + err.message;
         }
-        progressCompleted.value = failIndexes.length;
-        progressFail.value = failIndexes.length;
+        progressCompleted.value = failIdx.length;
+        progressFail.value = failIdx.length;
       }
-
       progressDone.value = true;
-
-      if (progressFail.value === 0) {
-        vant.showToast({ message: '重试全部成功！', icon: 'success', duration: 2000 });
-      } else {
-        vant.showToast({ message: `重试后仍有 ${progressFail.value} 条失败`, icon: 'fail', duration: 3000 });
-      }
+      vant.showToast({ message: progressFail.value === 0 ? '重试全部成功！' : `重试后仍有 ${progressFail.value} 条失败`, icon: progressFail.value === 0 ? 'success' : 'fail', duration: 2000 });
     };
 
     onMounted(() => { loadFromCache(); });
 
     return {
-      records, globalDate, showDatePicker, tempDate, minDate, maxDate,
+      records, globalDate, reporter, showDatePicker, minDate, maxDate,
       submitting, showProgress, progressList, progressCompleted,
       progressSuccess, progressFail, progressTotal, progressDone, progressPercent,
-      addRow, removeRow, submitData, onDateConfirm, closeProgress, retryFailed
+      addRow, removeRow, saveDraft, submitData, onDateConfirm, closeProgress, retryFailed
     };
   }
 });

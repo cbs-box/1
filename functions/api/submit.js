@@ -52,12 +52,9 @@ export async function onRequest(context) {
     const payload = {
       date: globalDate,
       time: record.time || '',
-      field1: record.f1 || '',
-      field2: record.f2 || '',
-      field3: record.f3 || '',
-      field4: record.f4 || '',
-      field5: record.f5 || '',
-      field6: record.f6 || ''
+      bags: record.bags || '',
+      grossWeight: record.grossWeight || '',
+      cargoWeight: record.cargoWeight || ''
     };
 
     try {

@@ -1,36 +1,18 @@
 /**
  * Cloudflare Pages Function - 接收前端提交的数据，循环逐条发送 webhook 到 WPS 多维表
- * 
- * 环境变量配置（在 Cloudflare Pages 控制台设置）：
- *   WPS_WEBHOOK_URL: WPS 多维表自动化流程的 webhook 地址
- * 
- * 部署方式：
- *   1. 将本项目推送到 GitHub 仓库
- *   2. 在 Cloudflare Pages 控制台连接该仓库
- *   3. 在 Pages 的环境变量中添加 WPS_WEBHOOK_URL
- *   4. 部署即可
  */
 
+// WPS 多维表 webhook 地址
+const WPS_WEBHOOK_URL = 'https://www.kdocs.cn/chatflow/api/v2/func/webhook/3H56oMJ5ZxwhbvKg39gmFnhZXg1';
+
 export async function onRequest(context) {
-  const { request, env } = context;
+  const { request } = context;
 
   // 仅接受 POST 请求
   if (request.method !== 'POST') {
     return new Response(JSON.stringify({ error: '仅支持 POST 请求' }), {
       status: 405,
       headers: { 'Content-Type': 'application/json', 'Allow': 'POST' }
-    });
-  }
-
-  // 检查 webhook URL 是否已配置
-  const WPS_WEBHOOK_URL = env.WPS_WEBHOOK_URL;
-  if (!WPS_WEBHOOK_URL) {
-    return new Response(JSON.stringify({
-      error: 'WPS_WEBHOOK_URL 未配置',
-      hint: '请在 Cloudflare Pages 的环境变量中设置 WPS_WEBHOOK_URL'
-    }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' }
     });
   }
 

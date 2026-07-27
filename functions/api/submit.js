@@ -64,7 +64,7 @@ export async function onRequest(context) {
     try {
       const resp = await fetch(WPS_WEBHOOK_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Origin': 'https://www.kdocs.cn' },
         body: JSON.stringify(payload)
       });
 

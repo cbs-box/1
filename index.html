@@ -120,38 +120,41 @@
     }
     .btn-minus:active { transform: scale(0.8); background: #fef0f0; }
 
-    /* 字段网格布局：2列 */
-    .field-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2px 10px;
+    /* 记录内字段布局 - 使用 flex 换行实现两列 */
+    .record-fields {
       padding-top: 4px;
+      display: flex;
+      flex-wrap: wrap;
     }
-    .field-grid .full-row {
-      grid-column: 1 / -1;
+    .record-fields .field-item {
+      width: 50%;
+      padding: 2px 4px;
     }
-    .field-grid .van-field {
-      padding: 2px 0 !important;
+    .record-fields .field-item.full {
+      width: 100%;
     }
-    .field-grid .van-field__label {
+    .record-fields .van-field {
+      padding: 0 !important;
+    }
+    .record-fields .van-field__label {
       width: auto !important;
-      min-width: 48px;
+      min-width: 42px;
       margin-right: 2px;
       font-size: 13px !important;
       color: #646566;
     }
-    .field-grid .van-field__body input {
+    .record-fields .van-field__body input {
       font-size: 14px !important;
       background: #f7f8fa !important;
       border-radius: 6px !important;
-      padding: 4px 10px !important;
-      height: 36px !important;
+      padding: 4px 8px !important;
+      height: 34px !important;
     }
-    .field-grid .time-field .van-field__label {
+    .record-fields .time-field .van-field__label {
       color: #1989fa !important;
       font-weight: 600;
     }
-    .field-grid .time-field .van-field__body input {
+    .record-fields .time-field .van-field__body input {
       background: #f0f7ff !important;
     }
 
@@ -298,48 +301,60 @@
         <span class="record-index">#{{ index + 1 }}</span>
         <span class="btn-minus" @click="removeRow(index)">✕</span>
       </div>
-      <div class="field-grid">
-        <van-field
-          v-model="item.time"
-          label="时间"
-          placeholder="如 08:30"
-          clearable
-          class="full-row time-field"
-        />
-        <van-field
-          v-model="item.bags"
-          label="袋数"
-          placeholder="请输入"
-          clearable
-          type="number"
-        />
-        <van-field
-          v-model="item.carNumber"
-          label="车号"
-          placeholder="请输入"
-          clearable
-        />
-        <van-field
-          v-model="item.tareWeight"
-          label="车皮重"
-          placeholder="请输入"
-          clearable
-          type="number"
-        />
-        <van-field
-          v-model="item.grossWeight"
-          label="毛重"
-          placeholder="请输入"
-          clearable
-          type="number"
-        />
-        <van-field
-          v-model="item.cargoWeight"
-          label="货重"
-          placeholder="请输入"
-          clearable
-          type="number"
-        />
+      <div class="record-fields">
+        <div class="field-item full">
+          <van-field
+            v-model="item.time"
+            label="时间"
+            placeholder="如 08:30"
+            clearable
+            class="time-field"
+          />
+        </div>
+        <div class="field-item">
+          <van-field
+            v-model="item.bags"
+            label="袋数"
+            placeholder="请输入"
+            clearable
+            type="number"
+          />
+        </div>
+        <div class="field-item">
+          <van-field
+            v-model="item.carNumber"
+            label="车号"
+            placeholder="请输入"
+            clearable
+          />
+        </div>
+        <div class="field-item">
+          <van-field
+            v-model="item.tareWeight"
+            label="车皮重"
+            placeholder="请输入"
+            clearable
+            type="number"
+          />
+        </div>
+        <div class="field-item">
+          <van-field
+            v-model="item.grossWeight"
+            label="毛重"
+            placeholder="请输入"
+            clearable
+            type="number"
+          />
+        </div>
+        <div class="field-item">
+          <van-field
+            v-model="item.cargoWeight"
+            label="货重"
+            placeholder="请输入"
+            clearable
+            type="number"
+          />
+        </div>
       </div>
     </div>
 

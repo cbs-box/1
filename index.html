@@ -9,7 +9,6 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       background: #f5f6fa;
-      padding-bottom: 100px;
       font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Arial, sans-serif;
     }
     .page-header {
@@ -160,18 +159,14 @@
 
     /* ---- 底部 ---- */
     .footer-bar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
       background: #ffffff;
-      padding: 10px 14px;
-      padding-bottom: calc(10px + env(safe-area-inset-bottom));
+      padding: 12px 14px;
+      margin-top: 4px;
+      padding-bottom: calc(12px + env(safe-area-inset-bottom));
       display: flex;
       gap: 10px;
-      box-shadow: 0 -2px 16px rgba(0,0,0,0.08);
-      z-index: 999;
       border-top: 1px solid #ebedf0;
+      position: relative;
     }
     .footer-bar .van-button {
       flex: 1;
@@ -383,6 +378,7 @@
       title="选择日期"
       :min-date="minDate"
       :max-date="maxDate"
+      :model-value="pickerDefault"
       @confirm="onDateConfirm"
       @cancel="showDatePicker = false"
     />
@@ -404,9 +400,12 @@
       <ul class="record-progress-list">
         <li v-for="(p, idx) in progressList" :key="idx" class="record-progress-item">
           <span class="status-dot" :class="p.status"></span>
-          <span class="label">第{{ idx+1 }}条<small v-if="p.time">{{ p.time }}</small></span>
+          <span class="label">
+            第{{ idx+1 }}条<small v-if="p.time">{{ p.time }}</small>
+            <small v-if="p.wpsStatus" style="color:#969799;display:block;font-size:11px;">WPS状态: {{ p.wpsStatus }}</small>
+          </span>
           <span v-if="p.status==='success'" style="color:#07c160">✓</span>
-          <span v-else-if="p.status==='fail'" style="color:#ee0a24" :title="p.error">✗</span>
+          <span v-else-if="p.status==='fail'" style="color:#ee0a24;cursor:pointer;" :title="p.error" @click="showWpsDetail(p)">✗</span>
           <span v-else-if="p.status==='loading'" style="color:#1989fa">⋯</span>
           <span v-else style="color:#c8c9cc">—</span>
         </li>
@@ -451,6 +450,9 @@ const app = createApp({
     const REPORTER_KEY = 'data_reporter_v4';
     const minDate = new Date(2020, 0, 1);
     const maxDate = new Date(2030, 11, 31);
+
+    // 日期选择器默认显示当天
+    const pickerDefault = new Date();
 
     const progressPercent = computed(() => {
       if (progressTotal.value === 0) return 0;
@@ -563,7 +565,7 @@ const app = createApp({
       progressTotal.value = records.value.length;
       failedItems.value = [];
 
-      progressList.value = records.value.map(r => ({ status: 'loading', time: r.time, error: '' }));
+      progressList.value = records.value.map(r => ({ status: 'loading', time: r.time, error: '', wpsStatus: '' }));
 
       const toSubmit = records.value.map(r => ({
         time: r.time,
@@ -602,8 +604,9 @@ const app = createApp({
           for (let i = 0; i < result.results.length; i++) {
             const r = result.results[i];
             progressList.value[i].status = r.success ? 'success' : 'fail';
+            progressList.value[i].wpsStatus = `HTTP ${r.status}${r.response ? ' · ' + String(r.response).substring(0, 80) : ''}`;
             if (!r.success) {
-              progressList.value[i].error = r.error || `HTTP ${r.status}`;
+              progressList.value[i].error = r.error || `WPS响应: ${r.response ? String(r.response).substring(0, 200) : 'HTTP ' + r.status}`;
               failedItems.value.push(i);
             }
             progressCompleted.value = i + 1;
@@ -632,6 +635,15 @@ const app = createApp({
     };
 
     const closeProgress = () => { showProgress.value = false; };
+
+    // 显示 WPS 响应详情
+    const showWpsDetail = (p) => {
+      vant.showDialog({
+        title: 'WPS 响应详情',
+        message: p.error || p.wpsStatus || '无详细信息',
+        confirmButtonText: '关闭'
+      });
+    };
 
     const retryFailed = async () => {
       if (failedItems.value.length === 0) return;
@@ -677,7 +689,8 @@ const app = createApp({
             const r = result.results[i];
             const oi = failedRecs[i].originalIndex;
             progressList.value[oi].status = r.success ? 'success' : 'fail';
-            if (!r.success) { progressList.value[oi].error = r.error || `HTTP ${r.status}`; failedItems.value.push(oi); }
+            progressList.value[oi].wpsStatus = `HTTP ${r.status}${r.response ? ' · ' + String(r.response).substring(0, 80) : ''}`;
+            if (!r.success) { progressList.value[oi].error = r.error || `WPS响应: ${r.response ? String(r.response).substring(0, 200) : 'HTTP ' + r.status}`; failedItems.value.push(oi); }
             progressCompleted.value = i + 1;
             if (r.success) progressSuccess.value++; else progressFail.value++;
             await new Promise(resolve => setTimeout(resolve, 50));
@@ -698,10 +711,10 @@ const app = createApp({
     onMounted(() => { loadFromCache(); });
 
     return {
-      records, globalDate, reporter, showDatePicker, minDate, maxDate,
+      records, globalDate, reporter, showDatePicker, minDate, maxDate, pickerDefault,
       submitting, showProgress, progressList, progressCompleted,
       progressSuccess, progressFail, progressTotal, progressDone, progressPercent, progressTitle,
-      addRow, removeRow, saveDraft, submitData, onDateConfirm, closeProgress, retryFailed
+      addRow, removeRow, saveDraft, submitData, onDateConfirm, closeProgress, showWpsDetail, retryFailed
     };
   }
 });

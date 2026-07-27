@@ -79,7 +79,7 @@ export async function onRequest(context) {
         index: i,
         success: resp.ok,
         status: resp.status,
-        response: respBody.substring(0, 500) // 截断长响应
+        response: respBody
       });
     } catch (err) {
       results.push({

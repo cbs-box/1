@@ -48,8 +48,9 @@ export async function onRequest(context) {
   for (let i = 0; i < records.length; i++) {
     const record = records[i];
 
-    // 构建发送给 WPS 的 payload
+    // 构建发送给 WPS 的 payload（序号从1开始）
     const payload = {
+      sequence: i + 1,
       date: globalDate,
       reporter: reporter || '',
       time: record.time || '',

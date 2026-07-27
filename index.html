@@ -302,7 +302,7 @@
         <span class="btn-minus" @click="removeRow(index)">✕</span>
       </div>
       <div class="record-fields">
-        <div class="field-item full">
+        <div class="field-item">
           <van-field
             v-model="item.time"
             label="时间"
@@ -313,19 +313,19 @@
         </div>
         <div class="field-item">
           <van-field
+            v-model="item.carNumber"
+            label="车号"
+            placeholder="请输入"
+            clearable
+          />
+        </div>
+        <div class="field-item">
+          <van-field
             v-model="item.bags"
             label="袋数"
             placeholder="请输入"
             clearable
             type="number"
-          />
-        </div>
-        <div class="field-item">
-          <van-field
-            v-model="item.carNumber"
-            label="车号"
-            placeholder="请输入"
-            clearable
           />
         </div>
         <div class="field-item">
@@ -391,7 +391,7 @@
   <!-- 进度弹窗 -->
   <div v-if="showProgress" class="progress-overlay">
     <div class="progress-dialog">
-      <div class="title">{{ progressDone ? '提交完成' : '正在提交...' }}</div>
+      <div class="title">{{ progressDone ? progressTitle : '正在提交...' }}</div>
       <div class="total-progress">
         <div class="info">
           <span>进度 {{ progressCompleted }} / {{ progressTotal }}</span>
@@ -455,6 +455,12 @@ const app = createApp({
     const progressPercent = computed(() => {
       if (progressTotal.value === 0) return 0;
       return Math.round((progressCompleted.value / progressTotal.value) * 100);
+    });
+
+    const progressTitle = computed(() => {
+      if (!progressDone.value) return '';
+      if (progressFail.value === 0) return `全部提交成功！共 ${progressTotal.value} 条`;
+      return `成功 ${progressSuccess.value} 条，失败 ${progressFail.value} 条`;
     });
 
     const createEmptyRow = () => ({
@@ -694,7 +700,7 @@ const app = createApp({
     return {
       records, globalDate, reporter, showDatePicker, minDate, maxDate,
       submitting, showProgress, progressList, progressCompleted,
-      progressSuccess, progressFail, progressTotal, progressDone, progressPercent,
+      progressSuccess, progressFail, progressTotal, progressDone, progressPercent, progressTitle,
       addRow, removeRow, saveDraft, submitData, onDateConfirm, closeProgress, retryFailed
     };
   }

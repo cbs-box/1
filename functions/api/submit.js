@@ -43,7 +43,7 @@ export async function onRequest(context) {
     });
   }
 
-  // 逐条循环提交到 WPS 多维表 webhook，间隔 1.1 秒
+  // 逐条循环提交到 WPS 多维表 webhook
   const results = [];
   for (let i = 0; i < records.length; i++) {
     const record = records[i];
@@ -87,11 +87,6 @@ export async function onRequest(context) {
         status: resp.status,
         response: respBody
       });
-
-      // 每条记录间隔 1.1 秒，避免触发频率限制
-      if (i < records.length - 1) {
-        await new Promise(resolve => setTimeout(resolve, 1100));
-      }
     } catch (err) {
       results.push({
         index: i,

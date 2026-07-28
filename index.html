@@ -226,6 +226,7 @@
             readonly
             is-link
             @click="showDatePicker = true"
+            @click-input="showDatePicker = true"
           />
         </div>
         <div class="item">
@@ -418,9 +419,9 @@ const app = createApp({
         localStorage.setItem(STORAGE_KEY, JSON.stringify(records.value));
         localStorage.setItem(DATE_KEY, globalDate.value);
         localStorage.setItem(REPORTER_KEY, reporter.value);
-        vant.showToast({ message: '草稿已保存', icon: 'success' });
+        vant.showToast({ message: 'Draft saved', icon: 'success' });
       } catch (_) {
-        vant.showToast({ message: '保存失败', icon: 'fail' });
+        vant.showToast({ message: 'Save failed', icon: 'fail' });
       }
     };
 
@@ -444,16 +445,16 @@ const app = createApp({
         const row = records.value[0];
         row.time = ''; row.bags = ''; row.carNumber = '';
         row.tareWeight = ''; row.grossWeight = ''; row.cargoWeight = '';
-        vant.showToast({ message: '已清空', icon: 'info' });
+        vant.showToast({ message: 'Cleared', icon: 'info' });
         return;
       }
       vant.showConfirmDialog({
-        title: '删除确认',
-        message: `确定删除第 ${index + 1} 行？`,
+        title: 'Delete Row',
+        message: `Delete row #${index + 1}?`,
         confirmButtonColor: '#ee0a24'
       }).then(() => {
         records.value.splice(index, 1);
-        vant.showToast({ message: '已删除', icon: 'success' });
+        vant.showToast({ message: 'Deleted', icon: 'success' });
       }).catch(() => {});
     };
 
@@ -461,11 +462,11 @@ const app = createApp({
     // 逐条发送所有记录，Cloudflare 后端会循环调用 WPS webhook
     const submitData = async () => {
       if (!globalDate.value || !globalDate.value.trim()) {
-        vant.showToast({ message: '请选择日期', icon: 'fail' });
+        vant.showToast({ message: 'Please select a date', icon: 'fail' });
         return;
       }
       if (!reporter.value || !reporter.value.trim()) {
-        vant.showToast({ message: '请填写填写人', icon: 'fail' });
+        vant.showToast({ message: 'Please enter reporter name', icon: 'fail' });
         return;
       }
       const invalids = [];
@@ -475,7 +476,7 @@ const app = createApp({
         }
       }
       if (invalids.length > 0) {
-        vant.showToast({ message: `第 ${invalids.join('、')} 行「Time」不能为空`, icon: 'fail', duration: 2000 });
+        vant.showToast({ message: `Row ${invalids.join(', ')}: Time is required`, icon: 'fail', duration: 2000 });
         return;
       }
 

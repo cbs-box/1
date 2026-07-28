@@ -295,6 +295,7 @@
   <van-popup v-model:show="showDatePicker" position="bottom" round>
     <van-date-picker
       title="Select Date"
+      :model-value="pickerValue"
       :min-date="minDate"
       :max-date="maxDate"
       @confirm="onDateConfirm"
@@ -302,14 +303,14 @@
     />
   </van-popup>
 
-  <!-- 提交通知弹窗（保留中文） -->
+  <!-- 提交通知弹窗 -->
   <div v-if="showProgress" class="progress-overlay">
     <div class="progress-dialog">
-      <div class="title">{{ progressDone ? progressTitle : '正在提交...' }}</div>
+      <div class="title">{{ progressDone ? progressTitle : 'Submitting...' }}</div>
       <div class="total-progress">
         <div class="info">
-          <span>进度 {{ progressCompleted }} / {{ progressTotal }}</span>
-          <span>成功 <span class="done">{{ progressSuccess }}</span><span v-if="progressFail>0">，失败 <span class="fail">{{ progressFail }}</span></span></span>
+          <span>Progress {{ progressCompleted }} / {{ progressTotal }}</span>
+          <span>OK <span class="done">{{ progressSuccess }}</span><span v-if="progressFail>0">, Failed <span class="fail">{{ progressFail }}</span></span></span>
         </div>
         <van-progress :percentage="progressPercent" :stroke-width="8"
           :color="progressDone && progressFail===0 ? '#07c160' : (progressFail>0 ? '#ee0a24' : '#1989fa')"
@@ -319,8 +320,8 @@
         <li v-for="(p, idx) in progressList" :key="idx" class="record-progress-item">
           <span class="status-dot" :class="p.status"></span>
           <span class="label">
-            第{{ idx+1 }}条<small v-if="p.time">{{ p.time }}</small>
-            <small v-if="p.wpsStatus" style="color:#969799;display:block;font-size:11px;">WPS状态: {{ p.wpsStatus }}</small>
+            #{{ idx+1 }}<small v-if="p.time">{{ p.time }}</small>
+            <small v-if="p.wpsStatus" style="color:#969799;display:block;font-size:11px;">WPS: {{ p.wpsStatus }}</small>
           </span>
           <span v-if="p.status==='success'" style="color:#07c160">✓</span>
           <span v-else-if="p.status==='fail'" style="color:#ee0a24;cursor:pointer;" :title="p.error" @click="showWpsDetail(p)">✗</span>
@@ -330,11 +331,11 @@
       </ul>
       <div style="margin-top:16px;display:flex;gap:10px;">
         <template v-if="!progressDone">
-          <van-button type="default" block disabled round>请稍候...</van-button>
+          <van-button type="default" block disabled round>Please wait...</van-button>
         </template>
         <template v-if="progressDone">
-          <van-button type="default" block round @click="closeProgress">关闭</van-button>
-          <van-button v-if="progressFail>0" type="danger" block round plain @click="retryFailed">重试失败项</van-button>
+          <van-button type="default" block round @click="closeProgress">Close</van-button>
+          <van-button v-if="progressFail>0" type="danger" block round plain @click="retryFailed">Retry Failed</van-button>
         </template>
       </div>
     </div>
@@ -370,6 +371,8 @@ const app = createApp({
     const REPORTER_KEY = 'data_reporter_v5';
     const minDate = new Date(2020, 0, 1);   // 日期选择器最小范围
     const maxDate = new Date(2030, 11, 31); // 日期选择器最大范围
+    const today = new Date();
+    const pickerValue = ref([String(today.getFullYear()), String(today.getMonth() + 1).padStart(2, '0'), String(today.getDate()).padStart(2, '0')]); // 日期选择器默认选中当天
 
     // ===== 进度百分比（相对于当前批次总数） =====
     const progressPercent = computed(() => {
@@ -380,8 +383,8 @@ const app = createApp({
     // ===== 进度弹窗标题（提交完成后显示） =====
     const progressTitle = computed(() => {
       if (!progressDone.value) return '';
-      if (progressFail.value === 0) return `全部提交成功！共 ${progressTotal.value} 条`;
-      return `成功 ${progressSuccess.value} 条，失败 ${progressFail.value} 条`;
+      if (progressFail.value === 0) return `All submitted! Total ${progressTotal.value}`;
+      return `OK ${progressSuccess.value}, Failed ${progressFail.value}`;
     });
 
     // ===== 创建空记录行 =====
@@ -557,9 +560,9 @@ const app = createApp({
       submitting.value = false;
 
       if (progressFail.value === 0) {
-        vant.showToast({ message: `全部提交成功！共 ${records.value.length} 条`, icon: 'success', duration: 2000 });
+        vant.showToast({ message: `All submitted! Total ${records.value.length}`, icon: 'success', duration: 2000 });
       } else {
-        vant.showToast({ message: `成功 ${progressSuccess.value} 条，失败 ${progressFail.value} 条`, icon: 'fail', duration: 3000 });
+        vant.showToast({ message: `OK ${progressSuccess.value}, Failed ${progressFail.value}`, icon: 'fail', duration: 3000 });
       }
     };
 
@@ -567,9 +570,9 @@ const app = createApp({
 
     const showWpsDetail = (p) => {
       vant.showDialog({
-        title: 'WPS 响应详情',
-        message: p.error || p.wpsStatus || '无详细信息',
-        confirmButtonText: '关闭'
+        title: 'WPS Response',
+        message: p.error || p.wpsStatus || 'No details',
+        confirmButtonText: 'Close'
       });
     };
 
@@ -645,7 +648,7 @@ const app = createApp({
     onMounted(() => { loadFromCache(); });
 
     return {
-      records, globalDate, reporter, showDatePicker, minDate, maxDate,
+      records, globalDate, reporter, showDatePicker, minDate, maxDate, pickerValue,
       submitting, showProgress, progressList, progressCompleted,
       progressSuccess, progressFail, progressTotal, progressDone, progressPercent, progressTitle,
       addRow, removeRow, saveDraft, submitData, onDateConfirm, closeProgress, showWpsDetail, retryFailed

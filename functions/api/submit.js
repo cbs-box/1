@@ -10,7 +10,7 @@
  */
 
 // ===== WPS 多维表 webhook 地址（硬编码） =====
-const WPS_WEBHOOK_URL = 'https://www.kdocs.cn/chatflow/api/v2/func/webhook/3H56oMJ5ZxwhbvKg39gmFnhZXg1';
+const WPS_WEBHOOK_URL = 'https://www.kdocs.cn/chatflow/api/v2/func/webhook/3HDYovwBPZxHYaGP2tmC0RkRZlQ';
 
 /**
  * Cloudflare Pages Function 入口函数
